@@ -92,22 +92,25 @@ router.get('/currentApproval/:userID', async function (req, res) {
   }
 });
 
-router.put('/returnBook/:id&:ISBN&:limits', async (req, res) => {
-  try {
-    let { id, ISBN, limits } = req.params;
-    //console.log(limits);
-    await user.returnBook(id, ISBN, res);
-    limits = parseInt(limits) + 1;
-    console.log(res.status);
-    const userLimits = await user.updateUserLimits(id, limits);
-    if (res.status === 200) {
-      res.status(200).json({ message: 'returned successfully' });
-    } else {
-      res.status(404).json({ message: 'error' });
+router.put(
+  '/returnBook/:id&:ISBN&:limits&:startDate&:endDate',
+  async (req, res) => {
+    try {
+      let { id, ISBN, limits, startDate, endDate } = req.params;
+      //console.log(limits);
+      await user.returnBook(id, ISBN, startDate, endDate, res);
+      limits = parseInt(limits) + 1;
+      console.log(res.status);
+      const userLimits = await user.updateUserLimits(id, limits);
+      if (res.status === 200) {
+        res.status(200).json({ message: 'returned successfully' });
+      } else {
+        res.status(404).json({ message: 'error' });
+      }
+    } catch (error) {
+      throw error;
     }
-  } catch (error) {
-    throw error;
   }
-});
+);
 
 module.exports = router;

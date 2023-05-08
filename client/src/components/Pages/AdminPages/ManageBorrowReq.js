@@ -5,6 +5,19 @@ import Card from 'react-bootstrap/Card';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
+const config = {
+  headers: {
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+    'Access-Control-Allow-Headers':
+      'append,delete,entries,foreach,get,has,keys,set,values,Authorization',
+    'Content-Type': 'multipart/form-data',
+    authorization: `Bearer ${localStorage.getItem('token')}`,
+    userid: `${localStorage.getItem('id')}`,
+  },
+};
+
 const ManageBorrowedReq = () => {
   const navigate = useNavigate();
   const [rernder, setRernder] = useState();
@@ -17,11 +30,7 @@ const ManageBorrowedReq = () => {
     try {
       const res = await axios.get(
         `http://localhost:4000/admin/all-borrowed-request`,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
+        config
       );
       if (res.data.message == 'there found some requests') {
         setData(res.data.data);
@@ -38,11 +47,22 @@ const ManageBorrowedReq = () => {
 
   const approvalRequests = async (userID, ISBN, startDate, endDate) => {
     try {
-      const res = await axios.put(
-        `http://localhost:4000/admin/all-borrowed-requests/${userID}&${ISBN}&${startDate}&${endDate}`
-      );
+      const res = await axios({
+        method: 'put',
+        url: `http://localhost:4000/admin/aprove-borrowed-request/${userID}&${ISBN}&${startDate}&${endDate}`,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+          'Access-Control-Allow-Headers':
+            'append,delete,entries,foreach,get,has,keys,set,values,Authorization',
+          'Content-Type': 'multipart/form-data',
+          authorization: `Bearer ${localStorage.getItem('token')}`,
+          userid: `${localStorage.getItem('id')}`,
+        },
+      });
       if (res.status == 200) {
-        alert('Approval Successfuly.');
+        alert('Approval Successfully.');
         navigate('/admin/book/manage');
       } else {
         alert('Something Wrong.');
@@ -55,14 +75,20 @@ const ManageBorrowedReq = () => {
   };
 
   const rejectRequest = async (id, ISBN) => {
-    const res = await axios.delete(
-      `http://localhost:4000/admin/reject-borrowed-request/${id}&${ISBN}`,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+    const res = await axios({
+      method: 'delete',
+      url: `http://localhost:4000/admin/reject-borrowed-request/${id}&${ISBN}`,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+        'Access-Control-Allow-Headers':
+          'append,delete,entries,foreach,get,has,keys,set,values,Authorization',
+        'Content-Type': 'multipart/form-data',
+        authorization: `Bearer ${localStorage.getItem('token')}`,
+        userid: `${localStorage.getItem('id')}`,
+      },
+    });
     if (res.status == 202) {
       getAllRequest();
     }

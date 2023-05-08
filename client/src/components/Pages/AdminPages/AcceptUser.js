@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
-import AdminHeader from "../../../shared/Pages/AdminHeader.js";
-import Button from "react-bootstrap/Button";
-import Card from "react-bootstrap/Card";
-import Form from "react-bootstrap/Form";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import Alert from "react-bootstrap/Alert";
+import React, { useEffect, useState } from 'react';
+import AdminHeader from '../../../shared/Pages/AdminHeader.js';
+import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
+import Form from 'react-bootstrap/Form';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import Alert from 'react-bootstrap/Alert';
 
 const AcceptUser = () => {
   const navigate = useNavigate();
@@ -13,48 +13,73 @@ const AcceptUser = () => {
   const [data, setData] = useState([]);
   const [limits, setLimits] = useState([]);
   const getNewUsers = async () => {
-    const res = await axios.get("http://localhost:4000/admin/get-new-users", {
+    const res = await axios.get('http://localhost:4000/admin/get-new-users', {
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+        'Access-Control-Allow-Headers':
+          'append,delete,entries,foreach,get,has,keys,set,values,Authorization',
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        userid: `${localStorage.getItem('id')}`,
       },
     });
-    if (res.data.message == "get all users successfully.") {
+    if (res.data.message == 'get all users successfully.') {
       setData(res.data.allData);
     }
   };
   const approval = async (userID) => {
     const config = {
       headers: {
-        "Content-Type": "multipart/form-data",
+        'Content-Type': 'multipart/form-data',
       },
     };
-    const res = await axios.put(
-      `http://localhost:4000/admin/get-new-users/${userID}&${limits.limits}`
-    );
+    console.log(localStorage.getItem('token'));
+    const res = await axios({
+      method: 'put',
+      url: `http://localhost:4000/admin/get-new-users/${userID}&${limits.limits}`,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+        'Access-Control-Allow-Headers':
+          'append,delete,entries,foreach,get,has,keys,set,values,Authorization',
+        'Content-Type': 'multipart/form-data',
+        authorization: `Bearer ${localStorage.getItem('token')}`,
+        userid: `${localStorage.getItem('id')}`,
+      },
+    });
     if (res.status == 200) {
-      alert("Added Successfuly.");
-      navigate("/admin/book/manage");
+      alert('Added Successfuly.');
+      navigate('/admin/book/manage');
     } else {
-      alert("Something Wrong.");
+      alert('Something Wrong.');
     }
   };
   const rejectUser = async (id) => {
-    const res = await axios.delete(
-      `http://localhost:4000/admin/reject-user/${id}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const res = await axios({
+      method: 'delete',
+      url: `http://localhost:4000/admin/reject-user/${id}`,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+        'Access-Control-Allow-Headers':
+          'append,delete,entries,foreach,get,has,keys,set,values,Authorization',
+        'Content-Type': 'multipart/form-data',
+        authorization: `Bearer ${localStorage.getItem('token')}`,
+        userid: `${localStorage.getItem('id')}`,
+      },
+    });
     if (res.status == 202) {
       getNewUsers();
       setShow(true);
     }
   };
   useEffect(() => {
-    if (!localStorage.getItem("token")) {
-      navigate("/");
+    if (!localStorage.getItem('token')) {
+      navigate('/');
     } else {
       getNewUsers();
     }
@@ -66,7 +91,7 @@ const AcceptUser = () => {
           Book Delete
         </Alert>
       ) : (
-        ""
+        ''
       )}
       <AdminHeader />
       <div className="container mt-2">
@@ -77,7 +102,7 @@ const AcceptUser = () => {
                 return (
                   <>
                     <Card
-                      style={{ width: "22rem", height: "25rem" }}
+                      style={{ width: '22rem', height: '25rem' }}
                       className="mb-3"
                     >
                       <Card.Body /* className="text-center" */>
@@ -129,7 +154,7 @@ const AcceptUser = () => {
                   </>
                 );
               })
-            : ""}
+            : ''}
         </div>
       </div>
     </>

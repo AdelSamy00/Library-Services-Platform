@@ -1,4 +1,5 @@
 const conn = require('../config/connection');
+const bcrypt = require('bcryptjs');
 
 class User {
   async getUserByEmail(email) {
@@ -24,6 +25,9 @@ class User {
   async createUser(req, res, token) {
     const data = req.body;
     try {
+      const password = data.password[0];
+      const hashPassword = await bcrypt.hash(password, 10);
+      data.password = hashPassword;
       const result = await conn.awaitQuery(
         'insert into users set ?',
         {
@@ -52,11 +56,22 @@ class User {
   }
   async userLogin(email, password) {
     try {
-      const result = await conn.awaitQuery(
-        'select * from users where ? and ?',
-        [{ email: email }, { password: password }]
-      );
-      return result;
+      const userDetails = await this.getUserByEmail(email);
+      console.log(userDetails);
+      if (userDetails.length > 0) {
+        const valid = await bcrypt.compare(
+          password[0],
+          userDetails[0].password
+        );
+        console.log(valid);
+        if (valid) {
+          return userDetails;
+        } else {
+          return [];
+        }
+      } else {
+        return [];
+      }
     } catch (error) {
       throw error;
     }
@@ -90,12 +105,14 @@ class User {
       throw error;
     }
   }
-  async returnBook(userID, bookISBN, res) {
+  async returnBook(userID, bookISBN, startDate, endDate, res) {
     try {
-      await conn.awaitQuery('update history set ? where ? and ?', [
+      await conn.awaitQuery('update history set ? where ? and ? and ? and ?', [
         { status: 'Returned' },
         { book_ISBN: bookISBN },
         { user_id: userID },
+        { book_startDate: startDate },
+        { book_endDate: endDate },
       ]);
       await conn.awaitQuery('update books set ? where ?', [
         { isBorrowed: 0 },

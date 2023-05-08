@@ -1,36 +1,52 @@
-import React, { useEffect, useState } from "react";
-import AdminHeader from "../../../shared/Pages/AdminHeader.js";
-import Button from "react-bootstrap/Button";
-import Card from "react-bootstrap/Card";
-import { Link, NavLink } from "react-router-dom";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import Alert from "react-bootstrap/Alert";
+import React, { useEffect, useState } from 'react';
+import AdminHeader from '../../../shared/Pages/AdminHeader.js';
+import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
+import { Link, NavLink } from 'react-router-dom';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import Alert from 'react-bootstrap/Alert';
 
 const ManageBooks = () => {
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
   const [data, setData] = useState([]);
-  const [filter, setFilter] = useState("");
+  const [filter, setFilter] = useState('');
+
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+      'Access-Control-Allow-Headers':
+        'append,delete,entries,foreach,get,has,keys,set,values,Authorization',
+      'Content-Type': 'multipart/form-data',
+      authorization: `Bearer ${localStorage.getItem('token')}`,
+      userid: `${localStorage.getItem('id')}`,
+    },
+  };
+
   const getAllBooks = async () => {
-    const res = await axios.get("http://localhost:4000/book", {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    if (res.data.message == "Get all books successfully.") {
+    const res = await axios.get('http://localhost:4000/book', config);
+    if (res.data.message == 'Get all books successfully.') {
       setData(res.data.data);
     }
   };
   const deleteBook = async (ISBN) => {
-    const res = await axios.delete(
-      `http://localhost:4000/admin/delete-book/${ISBN}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const res = await axios({
+      method: 'delete',
+      url: `http://localhost:4000/admin/delete-book/${ISBN}`,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+        'Access-Control-Allow-Headers':
+          'append,delete,entries,foreach,get,has,keys,set,values,Authorization',
+        'Content-Type': 'multipart/form-data',
+        authorization: `Bearer ${localStorage.getItem('token')}`,
+        userid: `${localStorage.getItem('id')}`,
+      },
+    });
     if (res.status == 202) {
       getAllBooks();
       setShow(true);
@@ -40,7 +56,7 @@ const ManageBooks = () => {
   const handleSelect = (e) => {
     setFilter(e.target.value);
     let value = e.target.value;
-    if (value == "rackNumber") {
+    if (value == 'rackNumber') {
       let sort = data.sort((a, b) => (a.rackNumber > b.rackNumber ? 1 : -1));
       setData(sort);
     } else {
@@ -50,11 +66,11 @@ const ManageBooks = () => {
   };
 
   useEffect(() => {
-    if (!localStorage.getItem("token")) {
-      navigate("/");
+    if (!localStorage.getItem('token')) {
+      navigate('/');
     }
-    if (localStorage.getItem("type")=="0") {
-      navigate("*")
+    if (localStorage.getItem('type') == '0') {
+      navigate('*');
     }
     getAllBooks();
   }, []);
@@ -65,7 +81,7 @@ const ManageBooks = () => {
           Book Delete
         </Alert>
       ) : (
-        ""
+        ''
       )}
       <AdminHeader />
       <div className="container mt-2">
@@ -92,17 +108,17 @@ const ManageBooks = () => {
                 return (
                   <>
                     <Card
-                      style={{ width: "33rem", height: "auto" }}
+                      style={{ width: '33rem', height: 'auto' }}
                       className="mb-4"
                     >
                       <Card.Img
                         variant="top"
                         src={`${el.img_url}`}
                         style={{
-                          width: "150px",
-                          textAlign: "center",
-                          margin: "auto",
-                          height: "200px",
+                          width: '150px',
+                          textAlign: 'center',
+                          margin: 'auto',
+                          height: '200px',
                         }}
                         className="mt-2"
                       />
@@ -136,7 +152,7 @@ const ManageBooks = () => {
                   </>
                 );
               })
-            : ""}
+            : ''}
         </div>
       </div>
     </>

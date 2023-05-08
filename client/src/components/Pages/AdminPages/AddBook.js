@@ -1,19 +1,19 @@
-import React, { useState } from "react";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import AdminHeader from "../../../shared/Pages/AdminHeader.js";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from 'react';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import AdminHeader from '../../../shared/Pages/AdminHeader.js';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 const AddBook = () => {
   const [validated, setValidated] = useState(false);
   const navigate = useNavigate();
 
   const [values, setValues] = useState({
-    ISBN: "",
-    title: "",
-    author: "",
-    subject: "",
-    rackNumber: "",
+    ISBN: '',
+    title: '',
+    author: '',
+    subject: '',
+    rackNumber: '',
   });
   const handleInput = (event) => {
     setValues((prev) => ({
@@ -21,7 +21,7 @@ const AddBook = () => {
       [event.target.name]: [event.target.value],
     }));
   };
-  const [file, setFile] = useState("");
+  const [file, setFile] = useState('');
   const setfile = (e) => {
     setFile(e.target.files[0]);
   };
@@ -30,37 +30,44 @@ const AddBook = () => {
     if (form.checkValidity() === true) {
       e.preventDefault();
       let formData = new FormData();
-      formData.append("photo", file);
-      formData.append("ISBN", values.ISBN);
-      formData.append("title", values.title);
-      formData.append("author", values.author);
-      formData.append("subject", values.subject);
-      formData.append("description", values.description);
-      formData.append("rackNumber", values.rackNumber);
+      formData.append('photo', file);
+      formData.append('ISBN', values.ISBN);
+      formData.append('title', values.title);
+      formData.append('author', values.author);
+      formData.append('subject', values.subject);
+      formData.append('description', values.description);
+      formData.append('rackNumber', values.rackNumber);
       if (
         file &&
-        values.ISBN != "" &&
-        values.title != "" &&
-        values.description != "" &&
-        values.author != "" &&
-        values.rackNumber != "" &&
-        values.subject != ""
+        values.ISBN != '' &&
+        values.title != '' &&
+        values.description != '' &&
+        values.author != '' &&
+        values.rackNumber != '' &&
+        values.subject != ''
       ) {
         const config = {
           headers: {
-            "Content-Type": "multipart/form-data",
+            'Content-Type': 'multipart/form-data',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+            'Access-Control-Allow-Headers':
+              'append,delete,entries,foreach,get,has,keys,set,values,Authorization',
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            userid: `${localStorage.getItem('id')}`,
           },
         };
         const res = await axios.post(
-          "http://localhost:4000/book/add-new-book",
+          'http://localhost:4000/book/add-new-book',
           formData,
           config
         );
         if (res.status == 200) {
-          alert("Added Successfuly.");
-          navigate("/admin/book/manage");
+          alert('Added Successfuly.');
+          navigate('/admin/book/manage');
         } else {
-          alert("Something Wrong.");
+          alert('Something Wrong.');
         }
         e.stopPropagation();
       }

@@ -20,24 +20,23 @@ const CurrentBorrowed = () => {
       }
     );
     if (res.data.message == 'user history') {
-
       setData(res.data.data);
     }
   };
   let limits = window.localStorage.getItem('limits');
-  const returnBook = async (userID, ISBN) => {
+  const returnBook = async (userID, ISBN, startDate, endDate) => {
     try {
       const res = await axios.put(
-        `http://localhost:4000/returnBook/${userID}&${ISBN}&${limits}`
+        `http://localhost:4000/returnBook/${userID}&${ISBN}&${limits}&${startDate}&${endDate}`
       );
       if (res.data.message == 'returned successfully') {
-        alert('returned Successfuly.');
+        alert('returned Successfully.');
         navigate('/books');
         localStorage.setItem('limits', limits + 1);
       }
     } catch (error) {
       if (error.response.data.message == 'error') {
-        alert('returned Successfuly.');
+        alert('returned Successfully.');
         navigate('/books');
         localStorage.setItem('limits', parseInt(limits) + 1);
       }
@@ -90,7 +89,12 @@ const CurrentBorrowed = () => {
                             variant="success"
                             size="lg"
                             onClick={() => {
-                              returnBook(el.user_id, el.book_ISBN);
+                              returnBook(
+                                el.user_id,
+                                el.book_ISBN,
+                                el.book_startDate,
+                                el.book_endDate
+                              );
                             }}
                           >
                             Return

@@ -94,7 +94,7 @@ class Admin {
         'select isBorrowed from books where ?',
         { ISBN: ISBN }
       );
-/*       console.log(status[0].isBorrowed); */
+      /*       console.log(status[0].isBorrowed); */
       if (!status[0].isBorrowed) {
         await conn.awaitQuery('update books set ? where ?', [
           { isBorrowed: 1 },
@@ -191,10 +191,11 @@ class Admin {
     ]);
   }
   async updateDateInHistory(id, ISBN, startDate, endDate) {
-    await conn.awaitQuery('update history set ? where ? and ?', [
+    await conn.awaitQuery('update history set ? where ? and ? and ?', [
       { book_startDate: startDate, book_endDate: endDate },
       { user_id: id },
       { book_ISBN: ISBN },
+      { status: 'pending' },
     ]);
   }
 }
