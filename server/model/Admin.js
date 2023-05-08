@@ -37,17 +37,16 @@ class Admin {
 
   async approveUser(id, limit, res) {
     try {
-      await conn.awaitQuery(
-        'update users set ? where ?',
-        [{ status: 1, limited_requests: limit }, { id: id }],
-        (err) => {
-          if (err) {
-            return res.status(500);
-          } else {
-            return res.status(200);
-          }
-        }
-      );
+      const exist = await conn.awaitQuery('update users set ? where ?', [
+        { status: 1, limited_requests: limit },
+        { id: id },
+      ]);
+      console.log(exist);
+      if (exist.affectedRows == 1) {
+        res.status(200);
+      } else {
+        res.status(404);
+      }
     } catch (error) {
       throw error;
     }

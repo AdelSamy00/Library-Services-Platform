@@ -10,7 +10,7 @@ router.post('/signup', async function (req, res) {
   const data = req.body;
   const result = await user.getUserByEmail(data.email);
   if (result.length > 0) {
-    res.status(210).send('this Email address is already reqistered.');
+    res.status(405).send('this Email address is already reqistered.');
   } else {
     const token = uuidv4();
     const result = await user.createUser(req, res, token);
@@ -20,7 +20,8 @@ router.post('/signup', async function (req, res) {
 
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
-  const result = await user.userLogin(email, password);
+  //console.log(typeof password);
+  const result = await user.userLogin(email, password[0]);
   //console.log(result[0].status);
   if (result.length == 0) {
     res.status(404).json({
@@ -34,8 +35,6 @@ router.post('/login', async (req, res) => {
     res
       .status(200)
       .json({ message: 'login Successfully.', userData: result[0] });
-    //const userId = JSON.parse(JSON.stringify(result))[0].id;
-    //console.log(res.setHeader('userid', userId));
   }
 });
 
@@ -47,7 +46,7 @@ router.post('/add-book-request/:id&:ISBN', async function (req, res) {
     console.log(result);
     if (result[0].isBorrowed == 1) {
       res
-        .status(401)
+        .status(406)
         .json({ message: 'the book is already Borrowed by another user.' });
     } else {
       await book.getRequestToBorrow(id, ISBN, res);
@@ -100,9 +99,10 @@ router.put(
       //console.log(limits);
       await user.returnBook(id, ISBN, startDate, endDate, res);
       limits = parseInt(limits) + 1;
-      console.log(res.status);
-      const userLimits = await user.updateUserLimits(id, limits);
-      if (res.status === 200) {
+      console.log(res.statusCode);
+      await user.updateUserLimits(id, limits);
+      console.log(res.statusCode);
+      if (res.statusCode == 200) {
         res.status(200).json({ message: 'returned successfully' });
       } else {
         res.status(404).json({ message: 'error' });

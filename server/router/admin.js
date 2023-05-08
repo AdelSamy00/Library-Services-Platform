@@ -36,9 +36,8 @@ router.put(
   adminAuth,
   async (req, res) => {
     const { userID, reqLimit } = req.params;
-    console.log(userID, reqLimit);
-    admin.approveUser(userID, reqLimit, res);
-    if (res.status === 500) {
+    await admin.approveUser(userID, reqLimit, res);
+    if (res.statusCode == 404) {
       res.json({ message: 'samething Wrong.' });
     } else {
       res.json({ message: 'Approveal completed ' });
@@ -59,8 +58,7 @@ router.get('/all-borrowed-request', auth, adminAuth, async (req, res) => {
       .json({ message: 'there found some requests', data: allRequest });
   }
 });
-
-router.put('/all-borrowed-requests', auth, adminAuth, async (req, res) => {
+/* router.put('/all-borrowed-requests', auth, adminAuth, async (req, res) => {
   const { id, ISBN, startDate, endDate } = req.body;
   await admin.approveBorrowedRequest(id, ISBN, startDate, endDate, res);
   if (res.status === 500) {
@@ -69,7 +67,7 @@ router.put('/all-borrowed-requests', auth, adminAuth, async (req, res) => {
     await admin.setStatusOfBookRequest(ISBN);
     res.json({ massage: 'Approveal completed ' });
   }
-});
+}); */
 router.put(
   '/aprove-borrowed-request/:id&:ISBN&:startDate&:endDate',
   auth,
@@ -140,12 +138,11 @@ router.put(
         rackNumber: rackNumber,
         subject: subject,
       };
-      console.log(data);
-      //const book = await admin.getBookByISBN(ISBN);
+      //console.log(data);
       const result = await admin.updateBook(ISBN, data, res);
-      console.log(result);
+      //console.log(result);
       if (result.affectedRows == 1) {
-        res.json({ message: 'update successfuly', data: result });
+        res.json({ message: 'update successfuly' });
       } else {
         res.json({ message: 'bad request' });
       }
@@ -159,7 +156,7 @@ router.delete('/reject-user/:id', auth, adminAuth, async (req, res) => {
   const { id } = req.params;
   const result = await admin.rejectUser(id);
   if (result.affectedRows == 1) {
-    res.status(202).json({ message: 'delete successfuly', data: result });
+    res.status(202).json({ message: 'delete successfuly' });
   } else {
     res.status(400).json({ message: 'bad request' });
   }

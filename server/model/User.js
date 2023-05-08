@@ -57,13 +57,10 @@ class User {
   async userLogin(email, password) {
     try {
       const userDetails = await this.getUserByEmail(email);
-      console.log(userDetails);
+      console.log(password);
       if (userDetails.length > 0) {
-        const valid = await bcrypt.compare(
-          password[0],
-          userDetails[0].password
-        );
-        console.log(valid);
+        const valid = await bcrypt.compare(password, userDetails[0].password);
+        //console.log(valid);
         if (valid) {
           return userDetails;
         } else {

@@ -21,7 +21,7 @@ const Signup = () => {
     axios
       .post('http://localhost:4000/signup', values)
       .then((res) => {
-        if (res.status == 210) {
+        if (res.status == 405) {
           alert('this Email address is already reqistered');
         } else {
           navigate('/');
