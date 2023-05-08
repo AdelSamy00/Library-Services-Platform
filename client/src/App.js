@@ -3,7 +3,6 @@ import Signup from '../src/shared/Pages/Signup.js';
 import NotFound from "../src/shared/Pages/NotFound.js";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Services from '../src/components/Pages/UserPages/Services.js';
 import Books from '../src/components/Pages/UserPages/Books.js';
 import Borrowed from './components/Pages/UserPages/RequestBorrow.js';
 import BorrowedHistory from '../src/components/Pages/UserPages/BorrowedHistory.js';
@@ -20,7 +19,6 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />}></Route>
         <Route path="/signup" element={<Signup />}></Route>
-        <Route path="/services" element={<Services />}></Route>
         <Route path="/books" element={<Books />}></Route>
         <Route path="/borrow/request/" element={<Borrowed />}></Route>
         <Route path="/borrowed/history" element={<BorrowedHistory />}></Route>

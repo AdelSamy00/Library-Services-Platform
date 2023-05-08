@@ -1,24 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useLocation } from 'react-router-dom';
-import Footer from '../../../shared/Pages/Footer';
-import Header from '../../../shared/Pages/Header';
-import '../../Style/Contact.css';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import { useNavigate } from 'react-router-dom';
-import Alert from 'react-bootstrap/Alert';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useLocation } from "react-router-dom";
+import Footer from "../../../shared/Pages/Footer";
+import Header from "../../../shared/Pages/Header";
+import "../../Style/Contact.css";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
+import { useNavigate } from "react-router-dom";
+import Alert from "react-bootstrap/Alert";
 
 const Borrowed = (props) => {
   const navigate = useNavigate();
   const localStorage = window.localStorage;
   const location = useLocation();
   const ISBN = location.state?.ISBN;
-  const id = localStorage.getItem('id');
+  const id = localStorage.getItem("id");
   const [show, setShow] = useState(false);
   const [values, setValues] = useState({
-    ISBN: '',
-    title: '',
+    ISBN: "",
+    title: "",
   });
   const sendRequest = async (e) => {
     e.preventDefault();
@@ -26,25 +26,25 @@ const Borrowed = (props) => {
       `http://localhost:4000/add-book-request/${id}&${ISBN}`
     );
     if (res.status == 406) {
-      alert('you cannot borrowed this book');
+      alert("you cannot borrowed this book");
     } else {
-      alert('send requset successfuly');
+      alert("send requset successfuly");
     }
   };
   useEffect(() => {
-    if (!localStorage.getItem('token')) {
-      navigate('/');
+    if (!localStorage.getItem("token")) {
+      navigate("/");
     }
     const getAllDetails = async (ISBN) => {
       const res = await axios.get(
         `http://localhost:4000/book/book-by-ISBN/${ISBN}`,
         {
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
         }
       );
-      if (res.data.message == 'found') {
+      if (res.data.message == "found") {
         const { ISBN, title } = res.data.data[0];
         setValues({
           ISBN: ISBN,
@@ -61,7 +61,7 @@ const Borrowed = (props) => {
           Book Delete
         </Alert>
       ) : (
-        ''
+        ""
       )}
       <Header />
       <div id="contact" className="contact-area section-padding">
@@ -95,17 +95,13 @@ const Borrowed = (props) => {
                       value={values.title}
                     />
                   </Form.Group>
-
                   <Form.Group className="mb-3" controlId="formBasicEmail">
                     <Form.Control
                       type="email"
                       placeholder="Email"
-                      value={localStorage.getItem('email')}
+                      value={localStorage.getItem("email")}
                       readOnly
                     />
-                  </Form.Group>
-                  <Form.Group className="mb-3 " controlId="formBasicPhone">
-                    <Form.Control type="number" placeholder="Phone" />
                   </Form.Group>
                   <Button
                     variant="primary"

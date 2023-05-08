@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import '../style/Signup.css';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import axios from "axios";
+import "../style/Signup.css";
+import { useNavigate } from "react-router-dom";
 const Signup = () => {
   const navigate = useNavigate();
   const [values, setValues] = useState({
-    name: '',
-    phone: '',
-    email: '',
-    password: '',
+    name: "",
+    phone: "",
+    email: "",
+    password: "",
   });
   const handleInput = (event) => {
     setValues((prev) => ({
@@ -19,15 +19,11 @@ const Signup = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     axios
-      .post('http://localhost:4000/signup', values)
+      .post("http://localhost:4000/signup", values)
       .then((res) => {
-        if (res.status == 405) {
-          alert('this Email address is already reqistered');
-        } else {
-          navigate('/');
-        }
+        navigate("/");
       })
-      .catch((err) => console.log(err));
+      .catch((err) => alert("this Email address is already registed"));
   };
 
   return (
@@ -68,17 +64,10 @@ const Signup = () => {
           onChange={handleInput}
           required
         />
-        <input
-          type="password"
-          placeholder="Confirm password"
-          className="form--input"
-          required
-        />
-
         <div className="form--marketing">
           <input id="okayToEmail" type="checkbox" required />
           <label htmlFor="okayToEmail" className="checkbox">
-            I want to join the newsletter
+            I agree to the privacy policy.
           </label>
         </div>
         <button className="signupForm--submit">Sign Up</button>
