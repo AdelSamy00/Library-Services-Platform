@@ -1,42 +1,42 @@
-import React, { useEffect, useState } from "react";
-import Footer from "../../../shared/Pages/Footer.js";
-import Header from "../../../shared/Pages/Header.js";
-import Button from "react-bootstrap/Button";
-import Card from "react-bootstrap/Card";
-import { Link, NavLink } from "react-router-dom";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import Alert from "react-bootstrap/Alert";
-import "../../Style/searchBar.css";
+import React, { useEffect, useState } from 'react';
+import Footer from '../../../shared/Pages/Footer.js';
+import Header from '../../../shared/Pages/Header.js';
+import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
+import { Link, NavLink } from 'react-router-dom';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import Alert from 'react-bootstrap/Alert';
+import '../../Style/searchBar.css';
 
 const Books = () => {
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
   const [data, setData] = useState([]);
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState('');
   const getAllBooks = async () => {
-    const res = await axios.get("http://localhost:4000/book/available-Books", {
+    const res = await axios.get('http://localhost:4000/book/available-Books', {
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     });
-    if (res.data.message == "Get all books successfully.") {
+    if (res.data.message == 'Get all books successfully.') {
       setData(res.data.data);
     }
   };
 
   const filteredData = data.filter((item) => {
     return (
-      item.title.includes(query.toLowerCase()) ||
-      item.author.includes(query.toLowerCase()) ||
-      item.subject.includes(query.toLowerCase()) ||
-      item.rackNumber.toString().includes(query.toLowerCase()) ||
-      item.ISBN.toString().includes(query.toLowerCase())
+      item.title.toLowerCase().includes(query.toLowerCase()) ||
+      item.author.toLowerCase().includes(query.toLowerCase()) ||
+      item.subject.toLowerCase().includes(query.toLowerCase()) ||
+      item.rackNumber.toString().toLowerCase().includes(query.toLowerCase()) ||
+      item.ISBN.toString().toLowerCase().includes(query.toLowerCase())
     );
   });
   useEffect(() => {
-    if (!localStorage.getItem("token")) {
-      navigate("/");
+    if (!localStorage.getItem('token')) {
+      navigate('/');
     }
     getAllBooks();
   }, []);
@@ -50,7 +50,9 @@ const Books = () => {
             placeholder="Search"
             name="text"
             className="input"
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => {
+              setQuery(e.target.value);
+            }}
           ></input>
           <svg
             fill="#000000"
@@ -74,16 +76,16 @@ const Books = () => {
                 return (
                   <>
                     <Card
-                      style={{ width: "33rem", height: "auto" }}
+                      style={{ width: '33rem', height: 'auto' }}
                       className="mb-4"
                     >
                       <Card.Img
                         variant="top"
                         src={`${el.img_url}`}
                         style={{
-                          width: "150px",
-                          textAlign: "center",
-                          margin: "auto",
+                          width: '150px',
+                          textAlign: 'center',
+                          margin: 'auto',
                         }}
                         className="mt-2"
                       />
@@ -109,7 +111,7 @@ const Books = () => {
                   </>
                 );
               })
-            : ""}
+            : ''}
         </div>
       </div>
       <Footer />
